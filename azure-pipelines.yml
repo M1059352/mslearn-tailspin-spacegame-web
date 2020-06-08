@@ -2,14 +2,22 @@ trigger:
 - '*'
 
 pool:
+<<<<<<< HEAD
   vmImage: 'ubuntu-16.04'
+=======
+  vmImage: 'ubuntu-18.04'
+>>>>>>> ace63f7f22385c658aa9da8b719f8414e29a79b7
   demands:
     - npm
 
 variables:
   buildConfiguration: 'Release'
   wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
+<<<<<<< HEAD
   dotnetSdkVersion: '3.1.100'
+=======
+  dotnetSdkVersion: '3.1.300'
+>>>>>>> ace63f7f22385c658aa9da8b719f8414e29a79b7
 
 steps:
 - task: UseDotNet@2
@@ -17,15 +25,19 @@ steps:
   inputs:
     version: '$(dotnetSdkVersion)'
 
+<<<<<<< HEAD
 - task: UseDotNet@2
   displayName: 'Use .NET Core SDK 2.1.505 for SonarCloud'
   inputs:
     version: '2.1.505'
 
+=======
+>>>>>>> ace63f7f22385c658aa9da8b719f8414e29a79b7
 - task: Npm@1
   displayName: 'Run npm install'
   inputs:
     verbose: false
+<<<<<<< HEAD
 
 - script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
   displayName: 'Compile Sass assets'
@@ -117,6 +129,35 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
   inputs:
+=======
+
+- script: './node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
+  displayName: 'Compile Sass assets'
+
+- task: gulp@1
+  displayName: 'Run gulp tasks'
+
+- script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
+  displayName: 'Write build info'
+  workingDirectory: $(wwwrootDir)
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore project dependencies'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build the project - $(buildConfiguration)'
+  inputs:
+    command: 'build'
+    arguments: '--no-restore --configuration $(buildConfiguration)'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish the project - $(buildConfiguration)'
+  inputs:
+>>>>>>> ace63f7f22385c658aa9da8b719f8414e29a79b7
     command: 'publish'
     projects: '**/*.csproj'
     publishWebProjects: false
